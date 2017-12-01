@@ -1,5 +1,9 @@
+/*
+	 Include criada por Locky
+	www.brasilmegatrucker.com
+*/
 #if !defined _samp_included
-    #error "Defina a include SA-MP
+    #error "Defina a include SA-MP"
 #else
     #if !defined OnPlayerFinishedDownloading
         #error "SA-MP 0.3.8 Requerido"
@@ -7,7 +11,6 @@
 #endif
 
 #define _samp_downloading
-
 
 public OnPlayerConnect(playerid)
 {
