@@ -94,7 +94,7 @@ stock IsPlayerDownloadedTextures(playerid) return PlayerDownload[playerid][_File
 stock IsPlayerDownloadedModels(playerid) return PlayerDownload[playerid][_FilesDFF];
 stock IsPlayerDownloadVirtualWorld(playerid) return PlayerDownload[playerid][_VirtualWorld];
 
-// Funções
+// Callback
 forward OnPlayerStartedDownload(playerid, virtualworld);
 
 
