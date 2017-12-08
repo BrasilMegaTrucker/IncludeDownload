@@ -78,21 +78,30 @@ public FlushDownloadInfo(playerid) {
 }
 
 
+
 /*
-				Funções
+		* Funções [Player]
 	native IsPlayerDownloading(playerid);
-	native IsPlayerDownloadTime(playerid);
-	native IsPlayerDownloadedFiles(playerid);
-	native IsPlayerDownloadedTextures(playerid);
-	native IsPlayerDownloadedModels(playerid);
-	native IsPlayerDownloadVirtualWorld(playerid);	
+	native GetPlayerDownloadTime(playerid);
+	native GetPlayerDownloadedFiles(playerid);
+	native GetPlayerDownloadedTextures(playerid);
+	native GetPlayerDownloadedModels(playerid);
+	native GetPlayerDownloadVirtualWorld(playerid);		
+	
+		* Funções [Server]
+	native IsServerUseArtwork();
+	native GetServerArtPatch();
 */
+// Player
 stock IsPlayerDownloading(playerid) return PlayerDownload[playerid][_Started];
-stock IsPlayerDownloadTime(playerid) return (PlayerDownload[playerid][_Started] ? (gettime()-PlayerDownload[playerid][_TimeCount]) : 0);
-stock IsPlayerDownloadedFiles(playerid) return (PlayerDownload[playerid][_FilesTXD] + PlayerDownload[playerid][_FilesDFF]);
-stock IsPlayerDownloadedTextures(playerid) return PlayerDownload[playerid][_FilesTXD];
-stock IsPlayerDownloadedModels(playerid) return PlayerDownload[playerid][_FilesDFF];
-stock IsPlayerDownloadVirtualWorld(playerid) return PlayerDownload[playerid][_VirtualWorld];
+stock GetPlayerDownloadTime(playerid) return (PlayerDownload[playerid][_Started] ? (gettime()-PlayerDownload[playerid][_TimeCount]) : 0);
+stock GetPlayerDownloadedFiles(playerid) return (PlayerDownload[playerid][_FilesTXD] + PlayerDownload[playerid][_FilesDFF]);
+stock GetPlayerDownloadedTextures(playerid) return PlayerDownload[playerid][_FilesTXD];
+stock GetPlayerDownloadedModels(playerid) return PlayerDownload[playerid][_FilesDFF];
+stock GetPlayerDownloadVirtualWorld(playerid) return PlayerDownload[playerid][_VirtualWorld];
+// Server
+stock IsServerUseArtwork() return GetConsoleVarAsBool("useartwork");
+stock GetServerArtPatch(folder[]) return GetConsoleVarAsString("artpath", folder, 64);
 
 // Callback
 forward OnPlayerStartedDownload(playerid, virtualworld);
