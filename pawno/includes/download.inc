@@ -90,7 +90,7 @@ public FlushDownloadInfo(playerid) {
 	
 		* Funções [Server]
 	native IsServerUseArtwork();
-	native GetServerArtPatch();
+	native GetServerArtworkFolder(folder[]);
 */
 // Player
 stock IsPlayerDownloading(playerid) return PlayerDownload[playerid][_Started];
@@ -101,7 +101,7 @@ stock GetPlayerDownloadedModels(playerid) return PlayerDownload[playerid][_Files
 stock GetPlayerDownloadVirtualWorld(playerid) return PlayerDownload[playerid][_VirtualWorld];
 // Server
 stock IsServerUseArtwork() return GetConsoleVarAsBool("useartwork");
-stock GetServerArtPatch(folder[]) return GetConsoleVarAsString("artpath", folder, 64);
+stock GetServerArtworkFolder(folder[]) return GetConsoleVarAsString("artpath", folder, 64);
 
 // Callback
 forward OnPlayerStartedDownload(playerid, virtualworld);
