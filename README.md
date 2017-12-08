@@ -1,26 +1,33 @@
 # Include Download
 Funções extras e leve correção do sistema de Download de Modelos do SA-MP 0.3.8
 
-Funções:
+* Funções [Player]:
 IsPlayerDownloading(playerid)
 - Retorna se um jogador está realizando download.
 
-IsPlayerDownloadTime(playerid)
+GetPlayerDownloadTime(playerid)
 - Retorna o tempo de download de um jogador (em segundos) caso esteja realizando download.
 
-IsPlayerDownloadedFiles(playerid)
+GetPlayerDownloadedFiles(playerid)
 - Retorna o número total de arquivos baixados.
 
-IsPlayerDownloadedTextures(playerid)
+GetPlayerDownloadedTextures(playerid)
 - Retorna o número total de texturas baixadas.
 
-IsPlayerDownloadedModels(playerid)
+GetPlayerDownloadedModels(playerid)
 - Retorna o número total de modelos baixados.
 
-IsPlayerDownloadVirtualWorld(playerid)
+GetPlayerDownloadVirtualWorld(playerid)
 - Retorna o mundo virtual da qual o jogador está realizando os downloads.
 
-Callback:
+* Funções [Server]:
+IsServerUseArtwork()
+- Retorna se o servidor está emitindo downloads de modelos.
+
+GetServerArtworkFolder(folder[])
+- Retorna o diretório onde os modelos serão lidos e distribuídos.
+
+* Callback:
 OnPlayerStartedDownload
 - É chamada quando o jogador inicia o procedimento de downloads.
 
