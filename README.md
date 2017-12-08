@@ -28,7 +28,7 @@ GetServerArtworkFolder(folder[])
 - Retorna o diretório onde os modelos serão lidos e distribuídos.
 
 ## Callback: ##
-OnPlayerStartedDownload
+OnPlayerStartedDownload(playerid, virtualworld)
 - É chamada quando o jogador inicia o procedimento de downloads.
 
 
