@@ -75,7 +75,7 @@ public OnPlayerRequestDownload(playerid, type, crc) {
 		PlayerDownload[playerid][_Started] = true;
 		PlayerDownload[playerid][_TimeCount] = gettime();
 		PlayerDownload[playerid][_VirtualWorld] = GetPlayerVirtualWorld(playerid);		
-		#id defined OnPlayerStartedDownload
+		#if defined OnPlayerStartedDownload
 			OnPlayerStartedDownload(playerid, PlayerDownload[playerid][_VirtualWorld]);
 		#endif
 	}
