@@ -25,7 +25,7 @@
 */
 
 #if !defined _samp_included
-    #error "Defina a include SA-MP
+    #error "Defina a include SA-MP"
 #else
     #if !defined OnPlayerFinishedDownloading
         #error "SA-MP 0.3.DL Requerido"
