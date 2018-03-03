@@ -1,11 +1,39 @@
+/*
+	##########################################################
+	##		Manipulação de Downloads		##
+	##			   by Locky			##	
+	##########################################################
+
+
+	
+		* Funções [Player]
+	native IsPlayerDownloading(playerid);
+	native GetPlayerDownloadTime(playerid);
+	native GetPlayerDownloadedFiles(playerid);
+	native GetPlayerDownloadedTextures(playerid);
+	native GetPlayerDownloadedModels(playerid);
+	native GetPlayerDownloadVirtualWorld(playerid);	
+	native GetPlayerDownloadTimeString(playerid);
+	
+		* Funções [Server]
+	native IsServerUseArtwork();
+	native GetServerArtworkFolder(folder[]);
+	
+		* Callback
+	OnPlayerStartedDownload(playerid, virtualworld);
+
+*/
+
 #if !defined _samp_included
     #error "Defina a include SA-MP
 #else
     #if !defined OnPlayerFinishedDownloading
-        #error "SA-MP 0.3.8 Requerido"
+        #error "SA-MP 0.3.DL Requerido"
     #endif
 #endif
-
+#if defined _samp_downloading
+	#endinput
+#endif
 #define _samp_downloading
 
 enum _down {
@@ -17,58 +45,70 @@ enum _down {
 };
 static PlayerDownload[MAX_PLAYERS][_down];
 
-
-
-public OnPlayerDisconnect(playerid, reason) {
+public OnPlayerConnect(playerid)
+{
+	PlayerDownload[playerid][_Started] = false;	
+	return CallLocalFunction("d_OnPlayerConnect", "d", playerid);	
+}
+#if defined _ALS_OnPlayerConnect
+	#undef OnPlayerConnect
+#else
+	#define _ALS_OnPlayerConnect
+#endif
+#define OnPlayerConnect d_OnPlayerConnect
+forward d_OnPlayerConnect(playerid);
+public OnPlayerDisconnect(playerid, reason) {	
 	for(new _down:e; e < _down; e++)
 		PlayerDownload[playerid][e] = 0;
-	return CallLocalFunction("d_OnPlayerDisconnect", "ii", playerid, reason);
+	return CallLocalFunction("d_OnPlayerDisconnect", "dd", playerid, reason);	
 }
-forward d_OnPlayerDisconnect(playerid, reason);
 #if defined _ALS_OnPlayerDisconnect
 	#undef OnPlayerDisconnect
 #else
 	#define _ALS_OnPlayerDisconnect
 #endif
 #define OnPlayerDisconnect d_OnPlayerDisconnect
+forward d_OnPlayerDisconnect(playerid, reason);
 
 public OnPlayerRequestDownload(playerid, type, crc) {
 	if(!PlayerDownload[playerid][_Started]) {
 		PlayerDownload[playerid][_Started] = true;
 		PlayerDownload[playerid][_TimeCount] = gettime();
-		PlayerDownload[playerid][_VirtualWorld] = GetPlayerVirtualWorld(playerid);
+		PlayerDownload[playerid][_VirtualWorld] = GetPlayerVirtualWorld(playerid);		
 		CallLocalFunction("OnPlayerStartedDownload", "dd", playerid, PlayerDownload[playerid][_VirtualWorld]);
 	}
-	switch(type) {
+	switch(type) 
+	{
 		case DOWNLOAD_REQUEST_TEXTURE_FILE: PlayerDownload[playerid][_FilesTXD]++;
 		case DOWNLOAD_REQUEST_MODEL_FILE: PlayerDownload[playerid][_FilesDFF]++;
-	}
-	return CallLocalFunction("d_OnPlayerRequestDownload", "iii", playerid, type, crc);
+	}	
+	if(funcidx("d_OnPlayerRequestDownload") != -1)
+		return CallLocalFunction("d_OnPlayerRequestDownload", "ddd", playerid, type, crc);
+	else 
+		return 1;	
 }
-forward d_OnPlayerRequestDownload(playerid, type, crc);
-
 #if defined _ALS_OnPlayerRequestDownload
 	#undef OnPlayerRequestDownload
 #else
 	#define _ALS_OnPlayerRequestDownload
 #endif
 #define OnPlayerRequestDownload d_OnPlayerRequestDownload
-
+forward d_OnPlayerRequestDownload(playerid, type, crc);
 
 public OnPlayerFinishedDownloading(playerid, virtualworld)
-{
-    CallLocalFunction("d_OnPlayerFinishDownload", "ii", playerid, virtualworld);
+{    
+	if(funcidx("d_OnPlayerFinishDownload") != -1)
+		d_OnPlayerFinishDownload(playerid, virtualworld);	
 	SetTimerEx("FlushDownloadInfo", 1000, false, "d", playerid);
 	return 1;
 }
-forward d_OnPlayerFinishDownload(playerid, virtualworld);
-
 #if defined _ALS_OnPlayerFinishDownload
     #undef OnPlayerFinishedDownloading
 #else
     #define _ALS_OnPlayerFinishDownload
 #endif
 #define OnPlayerFinishedDownloading d_OnPlayerFinishDownload
+forward d_OnPlayerFinishDownload(playerid, virtualworld);
 
 forward FlushDownloadInfo(playerid);
 public FlushDownloadInfo(playerid) {
@@ -79,19 +119,7 @@ public FlushDownloadInfo(playerid) {
 
 
 
-/*
-		* Funções [Player]
-	native IsPlayerDownloading(playerid);
-	native GetPlayerDownloadTime(playerid);
-	native GetPlayerDownloadedFiles(playerid);
-	native GetPlayerDownloadedTextures(playerid);
-	native GetPlayerDownloadedModels(playerid);
-	native GetPlayerDownloadVirtualWorld(playerid);		
-	
-		* Funções [Server]
-	native IsServerUseArtwork();
-	native GetServerArtworkFolder(folder[]);
-*/
+/////////////////////////////////////////////////////////////////////////////////////////
 // Player
 stock IsPlayerDownloading(playerid) return PlayerDownload[playerid][_Started];
 stock GetPlayerDownloadTime(playerid) return (PlayerDownload[playerid][_Started] ? (gettime()-PlayerDownload[playerid][_TimeCount]) : 0);
@@ -99,13 +127,25 @@ stock GetPlayerDownloadedFiles(playerid) return (PlayerDownload[playerid][_Files
 stock GetPlayerDownloadedTextures(playerid) return PlayerDownload[playerid][_FilesTXD];
 stock GetPlayerDownloadedModels(playerid) return PlayerDownload[playerid][_FilesDFF];
 stock GetPlayerDownloadVirtualWorld(playerid) return PlayerDownload[playerid][_VirtualWorld];
+stock GetPlayerDownloadTimeString(playerid) {
+	new timestr[14], hor, mi, seg = (gettime()-PlayerDownload[playerid][_TimeCount]);
+	if(seg >= 3600) {
+		hor = seg / 3600;
+		seg -= hor * 3600;
+	}
+	if(seg >= 60) {
+		mi = seg / 60;
+		seg -= mi * 60;
+	}
+	format(timestr, sizeof(timestr), "%02d:%02d:%02d", hor, mi, seg);
+	return timestr;
+}
 // Server
 stock IsServerUseArtwork() return GetConsoleVarAsBool("useartwork");
 stock GetServerArtworkFolder(folder[]) return GetConsoleVarAsString("artpath", folder, 64);
 
 // Callback
 forward OnPlayerStartedDownload(playerid, virtualworld);
-
 
 /*
 	Include criada por Locky
