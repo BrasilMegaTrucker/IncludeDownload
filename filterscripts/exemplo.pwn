@@ -21,7 +21,14 @@ public OnPlayerFinishedDownloading(playerid, virtualworld)
 	}
     return 1; 
 } 
-public OnPlayerStartedDownload(playerid, virtualworld) {
+public OnPlayerRequestDownload(playerid, type, crc) 
+{
+    new Msg[144];
+    format(Msg, sizeof(Msg), "~w~Progresso: ~g~%3.2f%%~n~~w~(%i bytes / %i kb / %i mb)", GetPlayerDownloadProgress(playerid), GetPlayerDownloadedBytes(playerid), GetPlayerDownloadedBytes(playerid)/1024, (GetPlayerDownloadedBytes(playerid)/1024)/1024);
+    GameTextForPlayer(playerid, Msg, 60000, 4);
+    return 1;
+}
+public OnPlayerStartedDownloading(playerid, virtualworld) {
 	SendClientMessage(playerid, 0xFFFF00FF, "[Beta] O download foi iniciado. Aguarde o término para continuar jogando!");
 	return 1;
 }
