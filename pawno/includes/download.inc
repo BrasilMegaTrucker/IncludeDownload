@@ -75,9 +75,7 @@ public OnPlayerRequestDownload(playerid, type, crc) {
 		PlayerDownload[playerid][_Started] = true;
 		PlayerDownload[playerid][_TimeCount] = gettime();
 		PlayerDownload[playerid][_VirtualWorld] = GetPlayerVirtualWorld(playerid);		
-		#if defined OnPlayerStartedDownload
-			OnPlayerStartedDownload(playerid, PlayerDownload[playerid][_VirtualWorld]);
-		#endif
+		CallLocalFunction("OnPlayerStartedDownload", "dd", playerid, PlayerDownload[playerid][_VirtualWorld]);
 	}
 	switch(type) 
 	{
@@ -216,12 +214,12 @@ public AddSimpleModel(virtualworld, baseid, newid, dffname[], txdname[])
 	}
 
 
-	if(!strfind(archives,escapedff))
+	if(strfind(archives,escapedff) == -1)
 	{
 		strcat(archives,escapedff);
 		_FilesGlobal++;
 	}
-	if(!strfind(archives,escapetxd))
+	if(strfind(archives,escapetxd) == -1)
 	{
 		strcat(archives,escapetxd);
 		_FilesGlobal++;
