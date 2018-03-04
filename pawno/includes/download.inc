@@ -151,10 +151,9 @@ stock GetPlayerDownloadTimeString(playerid) {
 stock IsServerUseArtwork() return GetConsoleVarAsBool("useartwork");
 stock GetServerArtworkFolder(folder[]) return GetConsoleVarAsString("artpath", folder, 64);
 
-#id defined OnPlayerStartedDownload
-	// Callback
-	forward OnPlayerStartedDownload(playerid, virtualworld);
-#endif
+// Callback
+forward OnPlayerStartedDownload(playerid, virtualworld);
+
 
 /*
 	Include criada por Locky
